@@ -1,0 +1,13 @@
+app/node_modules/
+app/dist/
+app/test-results/
+app/playwright-report/
+
+*.log
+*.local
+.DS_Store
+Thumbs.db
+
+.env
+.env.*
+!.env.example
