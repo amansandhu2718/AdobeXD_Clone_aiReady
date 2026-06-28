@@ -17,6 +17,10 @@ The agent can create editable `.amanxd.json` designs, validate layouts, export P
 
 Important: many AI agents do not automatically read instructions from nested folders. If the host project is opened above `amanXDtool/`, paste the bootstrap prompt from `docs/AGENT_BOOTSTRAP_PROMPT.md` into the chat before asking for a UI or asset.
 
+## Live Demo
+
+[https://amansandhu2718.github.io/AdobeXD_Clone_aiReady/](https://amansandhu2718.github.io/AdobeXD_Clone_aiReady/)
+
 ## Manual Editor
 
 ```powershell
