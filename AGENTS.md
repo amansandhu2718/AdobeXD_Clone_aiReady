@@ -1,63 +1,68 @@
-# myXD Agent Guide
+# AGENTS.md
 
-This root folder is the development workspace for `amanXDtool`.
+Use amanXDtool only through its MCP-style stdio server.
 
-Do not treat root `myXD/` as the shareable tool. The shareable tool is `amanXDtool/`.
+## Start Server
 
-Before changing the project, read root `GUIDELINES.md`. Root agents should use root docs as their operating context. Do not treat `amanXDtool/AGENTS.md` or `amanXDtool/docs/*` as instructions for working in `myXD`; those files are product documentation for agents who copy/open `amanXDtool/` by itself.
-
-## Operating Model
-
-- Use `$workstream-execution` only from this root workspace.
-- Keep the active workstream at `docs/workstreams/2026_06_20_amanxd_editor.md`.
-- Modify the React editor, local agent tools, and shareable docs inside `amanXDtool/`.
-- Maintain `amanXDtool/` docs for downstream users and agents, but follow root `AGENTS.md`, root `GUIDELINES.md`, and root `docs/` while developing the tool.
-- Build GitHub Pages output with the root command `npm run build:github`.
-- Do not add backend/cloud storage unless the user explicitly asks for it.
-
-## Commands
-
-Run from root:
+Run from the repository root:
 
 ```powershell
-npm run install:tool
-npm run dev:tool
-npm run lint:tool
-npm run test:tool
-npm run build:github
+node amanXDtool/agent-tools/server.mjs
 ```
 
-Run from `amanXDtool/` when validating the shareable folder directly:
+Run from `amanXDtool/`:
 
 ```powershell
-npm install
-npm run dev
-npm run lint
-npm run tools:verify-docs
-npm run test
-npm run build
-npx playwright test
-node agent-tools/scripts/list-tools.mjs
+node agent-tools/server.mjs
 ```
 
-## Documentation Contract
+## Protocol
 
-Root docs explain how to improve and release the tool.
-
-`amanXDtool/` docs explain how another agent or user can copy and use the tool inside a different project.
-
-Keep exposed tools current in:
-
-- `amanXDtool/agent-tools/tool-definitions.mjs`
-- `amanXDtool/docs/TOOL_API.md`
-- `amanXDtool/AGENTS.md`
-
-## Build Output
-
-The root GitHub Pages build output must go to:
+The server uses JSON-RPC 2.0 messages over stdio with MCP framing:
 
 ```text
-amanXDtool/project-output-github/
+Content-Length: <byte-length>\r\n\r\n<json>
 ```
 
-Do not manually edit files in `amanXDtool/project-output-github/`; regenerate them with `npm run build:github`.
+Supported methods:
+
+- `initialize`
+- `notifications/initialized`
+- `tools/list`
+- `tools/call`
+
+Call `tools/list` for the authoritative tool schemas before calling tools.
+
+## Useful Commands
+
+List tool names without starting an MCP client:
+
+```powershell
+node amanXDtool/agent-tools/scripts/list-tools.mjs
+```
+
+Verify MCP docs mention every exposed tool:
+
+```powershell
+npm --prefix amanXDtool run tools:verify-docs
+```
+
+## Paths
+
+Default project path:
+
+```text
+projects/current.amanxd.json
+```
+
+Default image output folder:
+
+```text
+exports/
+```
+
+Paths are relative to `amanXDtool/` unless a tool schema states otherwise.
+
+## Reference
+
+Read `amanXDtool/docs/TOOL_API.md` for MCP message examples and the current tool list.

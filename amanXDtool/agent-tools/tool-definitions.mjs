@@ -29,7 +29,7 @@ export const toolDefinitions = [
   {
     name: 'create_landing_page',
     description:
-      'High-level low-token tool: create a polished landing page project from a compact brief using modern Dribbble/Stitch/Lovable-style patterns.',
+      'Create a landing page project from a compact brief.',
     inputSchema: {
       type: 'object',
       required: ['name', 'brief'],
@@ -38,7 +38,7 @@ export const toolDefinitions = [
         name: { type: 'string' },
         brief: { type: 'string', description: 'Short product/design brief.' },
         brandName: { type: 'string' },
-        stylePreset: { type: 'string', description: 'Examples: dribbble-showcase, stitch-product, lovable-product, food-delivery, saas-calm.' },
+        stylePreset: { type: 'string', description: 'Optional style preset identifier.' },
         platform: { type: 'string', enum: ['web', 'android', 'ios', 'cross-platform'], default: 'web' },
         width: { type: 'number', default: 1440 },
         height: { type: 'number', default: 1200 },
@@ -48,7 +48,7 @@ export const toolDefinitions = [
   {
     name: 'create_mobile_screen',
     description:
-      'High-level low-token tool: create a polished mobile app screen from a compact brief using platform-aware app UI patterns.',
+      'Create a mobile app screen from a compact brief.',
     inputSchema: {
       type: 'object',
       required: ['name', 'brief'],
@@ -57,7 +57,7 @@ export const toolDefinitions = [
         name: { type: 'string' },
         brief: { type: 'string' },
         brandName: { type: 'string' },
-        stylePreset: { type: 'string', description: 'Examples: ios-clean, material-3, dribbble-showcase, food-delivery, fintech.' },
+        stylePreset: { type: 'string', description: 'Optional style preset identifier.' },
         platform: { type: 'string', enum: ['android', 'ios', 'cross-platform'], default: 'cross-platform' },
         width: { type: 'number', default: 390 },
         height: { type: 'number', default: 844 },
@@ -67,7 +67,7 @@ export const toolDefinitions = [
   {
     name: 'create_dashboard',
     description:
-      'High-level low-token tool: create a polished SaaS/admin/dashboard project from a compact brief with sidebar, metrics, charts, and activity panels.',
+      'Create a SaaS/admin/dashboard project from a compact brief with sidebar, metrics, charts, and activity panels.',
     inputSchema: {
       type: 'object',
       required: ['name', 'brief'],
@@ -76,7 +76,7 @@ export const toolDefinitions = [
         name: { type: 'string' },
         brief: { type: 'string' },
         brandName: { type: 'string' },
-        stylePreset: { type: 'string', description: 'Examples: saas-calm, glass-dashboard, ai-futuristic, fintech.' },
+        stylePreset: { type: 'string', description: 'Optional style preset identifier.' },
         platform: { type: 'string', enum: ['web', 'android', 'ios', 'cross-platform'], default: 'web' },
         width: { type: 'number', default: 1440 },
         height: { type: 'number', default: 900 },
@@ -86,7 +86,7 @@ export const toolDefinitions = [
   {
     name: 'create_asset_pack',
     description:
-      'High-level low-token tool: create a multi-frame image asset pack such as hero image, social preview, app card, and icon-style asset from a compact brief.',
+      'Create a multi-frame image asset pack such as hero image, social preview, app card, and icon-style asset from a compact brief.',
     inputSchema: {
       type: 'object',
       required: ['name', 'brief'],
@@ -95,14 +95,14 @@ export const toolDefinitions = [
         name: { type: 'string' },
         brief: { type: 'string' },
         brandName: { type: 'string' },
-        stylePreset: { type: 'string', description: 'Examples: dribbble-showcase, luxury-editorial, ai-futuristic, food-delivery.' },
+        stylePreset: { type: 'string', description: 'Optional style preset identifier.' },
       },
     },
   },
   {
     name: 'create_project',
     description:
-      'Create a new amanXD project JSON file with one page and one or more artboards. Use this as the first tool for a new AI-generated UI.',
+      'Create a new amanXD project JSON file with one page and one or more artboards.',
     inputSchema: {
       type: 'object',
       required: ['name'],
@@ -336,7 +336,7 @@ export const toolDefinitions = [
   {
     name: 'apply_operations',
     description:
-      'Apply many UI creation/edit operations in one tool call to reduce AI token usage. Supports add_frame, add_rectangle, add_ellipse, add_line, add_text, add_image_fill_shape, add_icon, group_elements, align_elements, distribute_elements, and update_element operation objects.',
+      'Apply many UI creation/edit operations in one tool call. Supports add_frame, add_rectangle, add_ellipse, add_line, add_text, add_image_fill_shape, add_icon, group_elements, align_elements, distribute_elements, and update_element operation objects.',
     inputSchema: {
       type: 'object',
       required: ['operations'],
@@ -439,7 +439,7 @@ export const toolDefinitions = [
   {
     name: 'export_project_json',
     description:
-      'Return the full amanXD project JSON as text so an agent can attach it, inspect it, or hand it to the app importer.',
+      'Return the full amanXD project JSON as text.',
     inputSchema: {
       type: 'object',
       properties: { path: pathProperty },

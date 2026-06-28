@@ -1,186 +1,89 @@
-# amanXDtool Tool API
+# amanXDtool MCP API
 
-The tool server is local and MCP-style over stdio.
+The server is a local MCP-style JSON-RPC server over stdio. It is not an HTTP server.
+
+## Start
+
+From `amanXDtool/`:
 
 ```powershell
 node agent-tools/server.mjs
 ```
 
-List tool names:
+From the repository root:
 
 ```powershell
-node agent-tools/scripts/list-tools.mjs
+node amanXDtool/agent-tools/server.mjs
 ```
 
-## Tools
+## Message Framing
 
-### High-Level Low-Token Tools
+Requests and responses use MCP stdio framing:
 
-Use these first for normal generation. They create complete editable projects from compact briefs.
+```text
+Content-Length: <byte-length>\r\n\r\n<json-rpc-message>
+```
 
-### `create_landing_page`
+Each JSON message uses JSON-RPC 2.0 shape:
 
-Create a polished landing page project using modern landing-page, marketplace, SaaS, and Dribbble-style composition patterns.
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {} }
+```
 
-Required:
+## Methods
+
+### `initialize`
+
+Returns protocol and server metadata.
+
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {} }
+```
+
+### `notifications/initialized`
+
+Optional notification. No response is sent.
+
+```json
+{ "jsonrpc": "2.0", "method": "notifications/initialized", "params": {} }
+```
+
+### `tools/list`
+
+Returns all tool schemas. This is the authoritative source for parameters.
+
+```json
+{ "jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {} }
+```
+
+### `tools/call`
+
+Runs one tool.
 
 ```json
 {
-  "name": "Food Delivery Landing",
-  "brief": "Zomato-style food delivery landing page with search, category chips, restaurant cards, and app CTA"
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "tools/call",
+  "params": {
+    "name": "create_project",
+    "arguments": {
+      "name": "Demo Project"
+    }
+  }
 }
 ```
 
-Optional: `brandName`, `stylePreset`, `platform`, `width`, `height`, `path`.
+## Tool Names
 
-### `create_mobile_screen`
+Use `tools/list` for full JSON schemas. Current tools:
 
-Create a polished mobile app screen using platform-aware app UI patterns.
-
-Required:
-
-```json
-{
-  "name": "Food App Home",
-  "brief": "Food delivery home screen with location search, categories, featured restaurant, and bottom nav"
-}
-```
-
-Optional: `brandName`, `stylePreset`, `platform`, `width`, `height`, `path`.
-
-### `create_dashboard`
-
-Create a polished SaaS/admin/dashboard screen with sidebar, metrics, chart area, and activity/insight panels.
-
-Required:
-
-```json
-{
-  "name": "Analytics Dashboard",
-  "brief": "SaaS analytics dashboard for orders, revenue, retention, and AI insights"
-}
-```
-
-Optional: `brandName`, `stylePreset`, `platform`, `width`, `height`, `path`.
-
-### `create_asset_pack`
-
-Create a multi-frame image asset pack such as social preview, hero asset, feature card, and icon-style asset.
-
-Required:
-
-```json
-{
-  "name": "Launch Asset Pack",
-  "brief": "Premium AI product launch visuals for website and social preview"
-}
-```
-
-Optional: `brandName`, `stylePreset`, `path`.
-
-### `validate_layout`
-
-Check a project or frame for accidental layout mistakes before export.
-
-Use after high-level creation and after low-level refinements.
-
-Example:
-
-```json
-{
-  "path": "projects/food-delivery.amanxd.json",
-  "frameId": "frame_landing",
-  "strict": false
-}
-```
-
-The validator reports duplicate ids, invalid geometry, out-of-frame layers, and suspicious peer overlaps. Text inside cards, icons inside controls, and badges inside larger containers are expected containment patterns.
-
-### Low-Level Tools
-
-### `create_project`
-
-Create a new editable `.amanxd.json` project. Defaults to one mobile frame when frames are omitted.
-
-### `list_project`
-
-Inspect pages, frames, elements, hierarchy, assets, and component metadata.
-
-### `add_frame`
-
-Add an artboard/frame to an existing project.
-
-### `add_rectangle`
-
-Add a rectangle, card, panel, input, button background, or shape mask.
-
-### `add_ellipse`
-
-Add a circle or ellipse for avatars, badges, and circular surfaces.
-
-### `add_line`
-
-Add a divider or line.
-
-### `add_text`
-
-Add text with typography fields including font family, size, weight, line height, letter spacing, alignment, and color.
-
-### `add_image_fill_shape`
-
-Add a rectangle or ellipse with a clipped image fill. Use this for screenshots, thumbnails, avatars, photos, and image assets.
-
-### `add_icon`
-
-Add a built-in SVG icon as an image-filled shape.
-
-### `list_icons`
-
-List available icon ids, names, and categories.
-
-### `group_elements`
-
-Group top-level sibling elements while preserving visual positions.
-
-### `align_elements`
-
-Align elements left, center, right, top, middle, or bottom. For multiple elements, default scope is selection bounds. For one element, frame bounds are used.
-
-Example:
-
-```json
-{
-  "frameId": "frame_home",
-  "elementIds": ["card_1", "card_2"],
-  "alignment": "left",
-  "scope": "selection"
-}
-```
-
-### `distribute_elements`
-
-Distribute three or more elements evenly horizontally or vertically.
-
-Example:
-
-```json
-{
-  "frameId": "frame_home",
-  "elementIds": ["card_1", "card_2", "card_3"],
-  "direction": "horizontal"
-}
-```
-
-### `update_element`
-
-Patch geometry, style, content, image source, visibility, locking, export marker, or children.
-
-### `apply_operations`
-
-Run many creation/edit operations in one call. Use this for complex UI generation.
-
-Supported operations:
-
+- `create_landing_page`
+- `create_mobile_screen`
+- `create_dashboard`
+- `create_asset_pack`
+- `create_project`
+- `list_project`
 - `add_frame`
 - `add_rectangle`
 - `add_ellipse`
@@ -188,69 +91,65 @@ Supported operations:
 - `add_text`
 - `add_image_fill_shape`
 - `add_icon`
+- `list_icons`
 - `group_elements`
 - `align_elements`
 - `distribute_elements`
 - `update_element`
+- `apply_operations`
+- `export_frame_image`
+- `export_region_image`
+- `validate_layout`
+- `export_project_json`
 
-### `export_frame_image`
+## Paths
 
-Render one frame/artboard to PNG or JPEG. Use optional `region` to export a specific area inside the frame.
-
-Default output:
-
-```text
-exports/frame.png
-```
-
-Region example:
-
-```json
-{
-  "frameId": "frame_landing",
-  "region": { "x": 80, "y": 500, "width": 620, "height": 320 },
-  "outputPath": "exports/search-section.png"
-}
-```
-
-### `export_region_image`
-
-Render a specific rectangular board area to PNG or JPEG.
-
-Use this when the user asks to export a selected section, card, crop, hero area, or particular board area.
-
-Example:
-
-```json
-{
-  "frameId": "frame_landing",
-  "x": 80,
-  "y": 500,
-  "width": 620,
-  "height": 320,
-  "outputPath": "exports/search-section.png",
-  "format": "png"
-}
-```
-
-### `export_project_json`
-
-Return the full editable project JSON.
-
-## Output Locations
-
-Editable projects:
+Default project path:
 
 ```text
-projects/
+projects/current.amanxd.json
 ```
 
-Image assets:
+Default image output folder:
 
 ```text
 exports/
 ```
 
-## Viewing Generated Assets
+Paths are relative to `amanXDtool/` unless a tool schema states otherwise.
 
-Agents should not open or view generated images automatically. Use image reading/viewing tools only when the user asks to view, inspect, compare, or visually review the generated asset.
+## Example Calls
+
+Create a project:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "method": "tools/call",
+  "params": {
+    "name": "create_project",
+    "arguments": {
+      "name": "Demo Project"
+    }
+  }
+}
+```
+
+Export a frame:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "method": "tools/call",
+  "params": {
+    "name": "export_frame_image",
+    "arguments": {
+      "frameId": "frame_home",
+      "outputPath": "exports/home.png",
+      "format": "png"
+    }
+  }
+}
+```
