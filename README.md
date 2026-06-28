@@ -1,5 +1,7 @@
 # amanXDtool
 
+**Live Demo:** [https://amansandhu2718.github.io/AdobeXD_Clone_aiReady/](https://amansandhu2718.github.io/AdobeXD_Clone_aiReady/)
+
 amanXDtool is a vibe-coded AI design tool I built for creating editable UI mockups and PNG/JPEG assets.
 
 It can be used in two ways:
@@ -67,10 +69,6 @@ myXD/
 ```
 
 ## GitHub Pages
-
-Live site:
-
-[https://amansandhu2718.github.io/AdobeXD_Clone_aiReady/](https://amansandhu2718.github.io/AdobeXD_Clone_aiReady/)
 
 This repo includes a GitHub Pages workflow. After pushing to GitHub:
 
