@@ -1,0 +1,13 @@
+{
+  "name": "myxd-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "install:tool": "npm --prefix amanXDtool install",
+    "dev:tool": "npm --prefix amanXDtool run dev -- --host 127.0.0.1",
+    "lint:tool": "npm --prefix amanXDtool run lint",
+    "test:tool": "npm --prefix amanXDtool run lint && npm --prefix amanXDtool run tools:verify-docs && npm --prefix amanXDtool run test && npm --prefix amanXDtool run build && npm --prefix amanXDtool run test:e2e",
+    "build:github": "node scripts/build-github.mjs"
+  }
+}

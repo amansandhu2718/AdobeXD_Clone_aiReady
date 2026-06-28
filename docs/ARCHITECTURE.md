@@ -1,48 +1,40 @@
-# amanXD Architecture
+# myXD Architecture
 
-## Overview
+## Workspace Roles
 
-The app is a Vite React TypeScript application under `app/`. It is local-first: all project state lives in React state while editing and persists to IndexedDB through Dexie. Codex and other AI agents interact with the app through an editable JSON project contract.
+`myXD/` is the development workspace. It owns workstream state, release/build scripts, and developer-facing documentation.
 
-## Main Subsystems
+`amanXDtool/` is the shareable AI tool folder. It contains the React editor, local MCP-style tool server, project outputs, image exports, and agent-facing documentation.
 
-- Editor shell: top command bar, left tools, layers panel, central canvas, right inspector, assets/fonts panel.
-- Document model: normalized project, page, frame, element, asset, style, and prototype-link data.
-- Canvas renderer: React Konva renders frames and elements, applies transforms, handles selection, and exports PNGs.
-- State layer: Zustand store holds the active project, selection, tool, viewport, and UI mode.
-- Persistence: Dexie stores projects, recent project metadata, and imported assets in IndexedDB.
-- AI project API: Zod validates imported `.amanxd.json` data and normalizes it before state/storage writes.
-- Export pipeline: JSON export serializes the document model; PNG export captures frames or selected nodes from the Konva stage.
+`amanXDtool/project-output-github/` is generated static output for GitHub Pages.
 
-## Data Flow
+## amanXDtool Runtime
 
-1. User or AI imports project JSON.
-2. Zod validates and normalizes the document.
-3. Zustand stores the active project and editor state.
-4. Canvas renders visible pages/frames/elements from the normalized model.
-5. Inspector updates element style and geometry.
-6. Autosave persists the project to IndexedDB.
-7. Export reads the same model for `.amanxd.json`, handoff metadata, or PNG output.
+- React + Vite + TypeScript for the manual editor.
+- React Konva for artboards, layers, transforms, image masks, selection, alignment, and export rendering.
+- Zustand for editor state and undo/redo history.
+- Dexie/IndexedDB for local-first autosave.
+- Zod for imported `.amanxd.json` validation.
+- Local `agent-tools/` for AI project creation and image export.
 
-## Folder Shape
+## Agent Tool Boundary
+
+Agents should use `amanXDtool/agent-tools/server.mjs` and its tool definitions to create or modify `.amanxd.json` projects.
+
+Generated editable project files default to:
 
 ```text
-app/
-  src/
-    components/
-      canvas/
-      editor/
-      panels/
-    data/
-    lib/
-    store/
-    types/
-    validation/
+amanXDtool/projects/
 ```
 
-## Scaling Rules
+Generated PNG/JPEG assets default to:
 
-- Keep the JSON model framework-agnostic so agents can create projects without knowing React internals.
-- Keep canvas rendering separate from validation and persistence.
-- Prefer small feature modules over a single giant editor file.
-- Treat export behavior as part of the public product contract.
+```text
+amanXDtool/exports/
+```
+
+## Release Boundary
+
+Root scripts build `amanXDtool/` and copy `amanXDtool/dist/` into `amanXDtool/project-output-github/`.
+
+The GitHub Pages output is static and should not include root workstream docs or source files.

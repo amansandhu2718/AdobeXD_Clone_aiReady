@@ -1,35 +1,63 @@
-# amanXD Agent Guide
+# myXD Agent Guide
 
-amanXD is a local-first React design and prototyping editor inspired by Adobe XD workflows. Agents should keep the app usable for visual UI creation, AI-generated project import, local persistence, and reliable export.
+This root folder is the development workspace for `amanXDtool`.
+
+Do not treat root `myXD/` as the shareable tool. The shareable tool is `amanXDtool/`.
+
+Before changing the project, read root `GUIDELINES.md`. Root agents should use root docs as their operating context. Do not treat `amanXDtool/AGENTS.md` or `amanXDtool/docs/*` as instructions for working in `myXD`; those files are product documentation for agents who copy/open `amanXDtool/` by itself.
 
 ## Operating Model
 
-- Keep the active workstream current at `docs/workstreams/2026_06_20_amanxd_editor.md`.
-- Treat `docs/AI_PROJECT_SCHEMA.md` as the contract for Codex-generated UI projects.
-- Prefer adding or editing designs through valid `.amanxd.json` project data, then validating that the app can import and render it.
-- Keep implementation changes aligned with `docs/PRD.md`, `docs/ARCHITECTURE.md`, `docs/UX_SPEC.md`, and `docs/EXPORT_SPEC.md`.
-- Do not introduce a backend unless the user explicitly approves that storage/API boundary change.
+- Use `$workstream-execution` only from this root workspace.
+- Keep the active workstream at `docs/workstreams/2026_06_20_amanxd_editor.md`.
+- Modify the React editor, local agent tools, and shareable docs inside `amanXDtool/`.
+- Maintain `amanXDtool/` docs for downstream users and agents, but follow root `AGENTS.md`, root `GUIDELINES.md`, and root `docs/` while developing the tool.
+- Build GitHub Pages output with the root command `npm run build:github`.
+- Do not add backend/cloud storage unless the user explicitly asks for it.
 
-## Build Commands
+## Commands
 
-Run commands from `app/` unless noted otherwise.
+Run from root:
 
-- Install dependencies: `npm install`
-- Start dev server: `npm run dev`
-- Typecheck and build: `npm run build`
-- Run tests: `npm run test`
+```powershell
+npm run install:tool
+npm run dev:tool
+npm run lint:tool
+npm run test:tool
+npm run build:github
+```
 
-## Design Creation Rules
+Run from `amanXDtool/` when validating the shareable folder directly:
 
-- A project must contain at least one page and one frame.
-- Frames contain elements; elements should use normalized style objects.
-- Prefer reusable assets for repeated colors, typography, images, and components.
-- Include prototype links as metadata rather than hard-coding navigation behavior into canvas components.
-- Validate imported AI JSON with the Zod schema before writing it to state or storage.
+```powershell
+npm install
+npm run dev
+npm run lint
+npm run tools:verify-docs
+npm run test
+npm run build
+npx playwright test
+node agent-tools/scripts/list-tools.mjs
+```
 
-## Visual Quality Defaults
+## Documentation Contract
 
-- Build dense, professional editor UI rather than a marketing page.
-- Keep panels compact and predictable: toolbar left, layers left, canvas center, inspector right, top command bar.
-- Use icons from `lucide-react`.
-- Keep cards and panels at small radii, avoid decorative blobs, and prioritize legibility.
+Root docs explain how to improve and release the tool.
+
+`amanXDtool/` docs explain how another agent or user can copy and use the tool inside a different project.
+
+Keep exposed tools current in:
+
+- `amanXDtool/agent-tools/tool-definitions.mjs`
+- `amanXDtool/docs/TOOL_API.md`
+- `amanXDtool/AGENTS.md`
+
+## Build Output
+
+The root GitHub Pages build output must go to:
+
+```text
+amanXDtool/project-output-github/
+```
+
+Do not manually edit files in `amanXDtool/project-output-github/`; regenerate them with `npm run build:github`.

@@ -1,7 +1,16 @@
-app/node_modules/
-app/dist/
-app/test-results/
-app/playwright-report/
+﻿node_modules/
+dist/
+coverage/
+.vite/
+
+amanXDtool/node_modules/
+amanXDtool/dist/
+amanXDtool/test-results/
+amanXDtool/playwright-report/
+amanXDtool/coverage/
+amanXDtool/projects/
+amanXDtool/exports/
+amanXDtool/project-output-github/
 
 *.log
 *.local

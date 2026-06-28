@@ -1,0 +1,13 @@
+{
+  "name": "amanxd-agent-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "amanxd-agent-tools": "./server.mjs"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "list-tools": "node scripts/list-tools.mjs"
+  }
+}
